@@ -14,6 +14,8 @@ for line in input_str:
         clipped_line = line
     input.append(clipped_line.replace("\n", ""))
 
+called_numbers = [int(x) for x in input_orig[0].split(",")]
+
 
 def create_bingo_sheets(input_nrs):
     bingo_sheets = []
@@ -27,38 +29,37 @@ def create_bingo_sheets(input_nrs):
     return bingo_sheets
 
 
-called_numbers = [int(x) for x in input_orig[0].split(",")]
+def check_if_line_full(sheet, row, col):
+    # check rows
+    row_counter = 0
+    for nr in sheet[row]:
+        if nr == -1:
+            row_counter += 1
+    if row_counter == 5:
+        return True
+    else:        # check columns
+        col_counter = 0
+        for i in range(len(sheet)):
+            if sheet[i][col] == -1:
+                col_counter += 1
+        if col_counter == 5:
+            return True
+    return False
+
+
+def calculate_unmarked_nrs(sheet):
+    unmarked_nrs = 0
+    for i in range(len(sheet)):
+        for j in range(len(sheet[i])):
+            nr = sheet[i][j]
+            if nr != -1:
+                unmarked_nrs += nr
+    return unmarked_nrs
 
 
 def puzzle1():
     bingo_sheets = create_bingo_sheets(input)
     bingo_doubles = copy.deepcopy(bingo_sheets)    # copy bingo sheets
-
-    def check_if_line_full(sheet, row, col):
-        # check rows
-        row_counter = 0
-        for nr in sheet[row]:
-            if nr == -1:
-                row_counter += 1
-        if row_counter == 5:
-            return True
-        else:        # check columns
-            col_counter = 0
-            for i in range(len(sheet)):
-                if sheet[i][col] == -1:
-                    col_counter += 1
-            if col_counter == 5:
-                return True
-        return False
-
-    def calculate_unmarked_nrs(sheet):
-        unmarked_nrs = 0
-        for i in range(len(sheet)):
-            for j in range(len(sheet[i])):
-                nr = sheet[i][j]
-                if nr != -1:
-                    unmarked_nrs += nr
-        return unmarked_nrs
 
     # check if nr is on sheets
     for nr in called_numbers:
@@ -77,39 +78,13 @@ def puzzle1():
 def puzzle2():
     bingo_sheets = create_bingo_sheets(input)
     bingo_doubles = copy.deepcopy(bingo_sheets)    # copy bingo sheets
-    sheets_with_full_lines = [False for x in range(len(bingo_sheets))]
-
-    def check_if_line_full(sheet, row, col):
-        # check rows
-        row_counter = 0
-        for nr in sheet[row]:
-            if nr == -1:
-                row_counter += 1
-        if row_counter == 5:
-            return True
-        else:        # check columns
-            col_counter = 0
-            for i in range(len(sheet)):
-                if sheet[i][col] == -1:
-                    col_counter += 1
-            if col_counter == 5:
-                return True
-        return False
+    sheets_with_full_lines = [False for _ in range(len(bingo_sheets))]
 
     def only_one_sheet_left():
         for sheet in sheets_with_full_lines:
-            if sheet == False:
+            if not sheet:
                 return False
         return True
-
-    def calculate_unmarked_nrs(sheet):
-        unmarked_nrs = 0
-        for i in range(len(sheet)):
-            for j in range(len(sheet[i])):
-                nr = sheet[i][j]
-                if nr != -1:
-                    unmarked_nrs += nr
-        return unmarked_nrs
 
     # check if nr is on sheets
     for nr in called_numbers:
@@ -119,7 +94,6 @@ def puzzle2():
                     if bingo_sheets[x][i][j] == nr:
                         bingo_doubles[x][i][j] = -1
                         if check_if_line_full(bingo_doubles[x], i, j):
-                            print('bingo! called nr:', nr)
                             sheets_with_full_lines[x] = True
                             if only_one_sheet_left():
                                 unmarked_nrs = calculate_unmarked_nrs(bingo_doubles[x])
