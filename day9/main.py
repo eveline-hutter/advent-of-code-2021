@@ -2,9 +2,7 @@ import copy
 import math
 
 with open('input9.txt') as file:
-    puzzle_input = [list(line) for line in file.read().splitlines()]    # open without /n
-
-puzzle_input = [[int(value) for value in line] for line in puzzle_input]
+    puzzle_input = [[int(value) for value in line] for line in file.read().splitlines()]    # open without /n
 
 
 def is_low_point(i, j):
