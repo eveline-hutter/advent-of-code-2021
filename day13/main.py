@@ -1,4 +1,4 @@
-simport numpy as np
+import numpy as np
 import copy
 
 with open('input13.txt') as file: puzzle_input = file.read().splitlines()  # open without /n
