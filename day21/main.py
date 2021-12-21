@@ -1,5 +1,3 @@
-from functools import lru_cache
-
 with open('input21.txt') as file: puzzle_input = file.read().splitlines()
 
 p1_start, p2_start = int(puzzle_input[0].replace('Player 1 starting position: ', '')), int(puzzle_input[1].replace('Player 2 starting position: ', ''))
